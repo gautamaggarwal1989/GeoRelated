@@ -1,8 +1,8 @@
 from decimal import Decimal
+import haversine
 
 import geohash
 from rest_framework import filters
-from django.conf import settings
 
 from  .utils import geosearch_precision
 
@@ -11,7 +11,7 @@ class ProximityFilter(filters.BaseFilterBackend):
     ''' Filtering on the basis of location from where
     the request was made so as to provide client with shops
     data that are in proximity of 5 kilometers as geohashing
-    is using a precision of 6 for our example.'''
+    is using a precision of 5 for our example.'''
 
     def filter_queryset(self, request, queryset, view):
         lat = Decimal(request.GET.get('lat'))
