@@ -123,7 +123,7 @@ STATIC_URL = 'static/'
 
 DEFAULT_AUTO_FIELD = 'django.db.models.BigAutoField'
 
-# Write a function to convert distance to precision later
+# Range supported between 2 to 29 kms
 GEOSEARCH_RANGE = 5
 
 REST_FRAMEWORK = {

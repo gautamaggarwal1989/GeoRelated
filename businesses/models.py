@@ -2,7 +2,8 @@ import uuid
 
 import geohash
 from django.db import models
-from django.conf import settings
+
+from  .utils import geosearch_precision
 
 
 class Business(models.Model):
@@ -31,7 +32,8 @@ class Business(models.Model):
         self.geohash = geohash.encode(
             self.latitude,
             self.longitude,
-            precision=settings.GEOSEARCH_RANGE
+            # Change GEOSEARCH_RANGE in settings.py to change it.
+            precision=geosearch_precision()
         )
         # Get the bounding box for the geohash
         bbox = geohash.bbox(self.geohash)
