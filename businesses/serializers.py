@@ -6,18 +6,13 @@ import haversine
 from .models import Business
 
 
-
 class BusinessSerializer(serializers.ModelSerializer):
     class Meta:
         model = Business
         fields = '__all__'
 
         extra_kwargs = {
-            'geohash': {'required': False},
-            'min_latitude': {'required': False},
-            'min_longitude': {'required': False},
-            'max_latitude': {'required': False},
-            'max_longitude': {'required': False}
+            'geo_hash': {'required': False},
         }
 
 

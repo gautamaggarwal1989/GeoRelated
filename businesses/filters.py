@@ -1,4 +1,10 @@
+from decimal import Decimal
+
+import geohash
 from rest_framework import filters
+from django.conf import settings
+
+from  .utils import geosearch_precision
 
 
 class ProximityFilter(filters.BaseFilterBackend):
@@ -8,19 +14,21 @@ class ProximityFilter(filters.BaseFilterBackend):
     is using a precision of 6 for our example.'''
 
     def filter_queryset(self, request, queryset, view):
-        lat = request.GET.get('lat')
-        lon = request.GET.get('lon')
+        lat = Decimal(request.GET.get('lat'))
+        lon = Decimal(request.GET.get('lon'))
 
         if lat is None or lon is None:
             raise Exception("Lattitude and longitude are mandatory!")
         
-        # Get the geohashes in whose binding box
-        # latitude and longitude falls into.
+        geo_hash = geohash.encode(
+            lat, lon, precision=geosearch_precision())
+        
+        # Get neighbouring geohashes
+        geohashes = geohash.neighbors(geo_hash)
+        geohashes.append(geo_hash)
+
         queryset = queryset.filter(
-           min_latitude__lt=lat,
-           max_latitude__gt=lat,
-           min_longitude__lt=lon,
-           max_longitude__gt=lon
+           geo_hash__in=geohashes
         )
 
         return queryset

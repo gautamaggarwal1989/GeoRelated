@@ -17,30 +17,17 @@ class Business(models.Model):
     latitude = models.FloatField()
     longitude = models.FloatField()
 
-    geohash = models.CharField(max_length=100)
-
-    # Calculate the bounding box
-    min_latitude = models.FloatField()
-    max_latitude = models.FloatField()
-    min_longitude = models.FloatField()
-    max_longitude = models.FloatField()
+    geo_hash = models.CharField(max_length=100)
 
     class Meta:
         unique_together = ['latitude', 'longitude']
 
     def save(self, *args, **kwargs):
-        self.geohash = geohash.encode(
+        self.geo_hash = geohash.encode(
             self.latitude,
             self.longitude,
             # Change GEOSEARCH_RANGE in settings.py to change it.
             precision=geosearch_precision()
         )
-        # Get the bounding box for the geohash
-        bbox = geohash.bbox(self.geohash)
-
-        self.min_latitude = bbox['s']
-        self.max_latitude = bbox['n']
-        self.min_longitude = bbox['w']
-        self.max_longitude = bbox['e']
 
         super().save(*args, **kwargs)
